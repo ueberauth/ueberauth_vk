@@ -102,11 +102,12 @@ defmodule Ueberauth.Strategy.VK do
     %Info{
       email: user["email"],
       first_name: user["first_name"],
-      image: fetch_image(user),
       last_name: user["last_name"],
       name: user["name"],
+      image: fetch_image(user),
+      location: user["location"],
       urls: %{
-        vk: "https://vk.com/" <> user["uid"]
+        vk: "https://vk.com/" <> to_string(user["uid"])
       }
     }
   end
