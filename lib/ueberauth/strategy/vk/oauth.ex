@@ -4,9 +4,9 @@ defmodule Ueberauth.Strategy.VK.OAuth do
 
   Add `client_id` and `client_secret` to your configuration:
 
-  config :ueberauth, Ueberauth.Strategy.VK.OAuth,
-    client_id: System.get_env("VK_APP_ID"),
-    client_secret: System.get_env("VK_APP_SECRET")
+      config :ueberauth, Ueberauth.Strategy.VK.OAuth,
+        client_id: System.get_env("VK_APP_ID"),
+        client_secret: System.get_env("VK_APP_SECRET")
   """
   use OAuth2.Strategy
 

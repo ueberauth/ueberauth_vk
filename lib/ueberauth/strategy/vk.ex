@@ -126,9 +126,9 @@ defmodule Ueberauth.Strategy.VK do
   end
 
   defp fetch_image(user) do
-    {_, photo_url} = user 
-      |> Enum.filter(fn {k, v} -> String.starts_with?(k, "photo_") end) 
-      |> Enum.sort_by(fn {"photo_" <> size, v} -> Integer.parse(size) end) 
+    {_, photo_url} = user
+      |> Enum.filter(fn {k, _v} -> String.starts_with?(k, "photo_") end)
+      |> Enum.sort_by(fn {"photo_" <> size, _v} -> Integer.parse(size) end)
       |> List.last
     photo_url
   end
