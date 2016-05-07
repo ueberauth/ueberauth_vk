@@ -6,7 +6,6 @@ defmodule Ueberauth.Strategy.VK do
   use Ueberauth.Strategy, default_scope: "",
                           default_display: "page",
                           profile_fields: "",
-                          uid_field: :id,
                           allowed_request_params: [
                             :display,
                             :scope
@@ -71,12 +70,10 @@ defmodule Ueberauth.Strategy.VK do
   Fetches the uid field from the response.
   """
   def uid(conn) do
-    uid_field =
-      conn
-      |> option(:uid_field)
-      |> to_string
-
-    conn.private.vk_user[uid_field]
+    conn.private.vk_user
+    |> Map.get("response")
+    |> List.first()
+    |> Map.get("uid")
   end
 
   @doc """
