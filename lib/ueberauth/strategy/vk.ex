@@ -3,12 +3,13 @@ defmodule Ueberauth.Strategy.VK do
   VK Strategy for Überauth.
   """
 
-  use Ueberauth.Strategy, default_scope: "email",
+  use Ueberauth.Strategy, default_scope: "",
                           default_display: "page",
                           profile_fields: "",
                           uid_field: :id,
                           allowed_request_params: [
-                            :display
+                            :display,
+                            :scope
                           ]
 
 
@@ -20,11 +21,13 @@ defmodule Ueberauth.Strategy.VK do
   Handles initial request for VK authentication.
   """
   def handle_request!(conn) do
-    allowed_params = conn
-     |> option(:allowed_request_params)
-     |> Enum.map(&to_string/1)
+    allowed_params =
+      conn
+      |> option(:allowed_request_params)
+      |> Enum.map(&to_string/1)
 
-    authorize_url = conn.params
+    authorize_url =
+      conn.params
       |> maybe_replace_param(conn, "auth_type", :auth_type)
       |> maybe_replace_param(conn, "scope", :default_scope)
       |> maybe_replace_param(conn, "display", :default_display)
@@ -97,12 +100,13 @@ defmodule Ueberauth.Strategy.VK do
   `Ueberauth.Auth` struct.
   """
   def info(conn) do
+    token = conn.private.vk_token
     user = conn.private.vk_user["response"] |> List.first
 
     %Info{
-      email: user["email"],
       first_name: user["first_name"],
       last_name: user["last_name"],
+      email: token.other_params["email"],
       name: user["name"],
       image: fetch_image(user),
       location: user["location"],
@@ -126,11 +130,16 @@ defmodule Ueberauth.Strategy.VK do
   end
 
   defp fetch_image(user) do
-    {_, photo_url} = user
+    user_photo =
+      user
       |> Enum.filter(fn {k, _v} -> String.starts_with?(k, "photo_") end)
       |> Enum.sort_by(fn {"photo_" <> size, _v} -> Integer.parse(size) end)
       |> List.last
-    photo_url
+
+    case user_photo do
+      nil -> nil
+      {_, photo_url} -> photo_url
+    end
   end
 
   defp fetch_user(conn, token) do
@@ -149,7 +158,8 @@ defmodule Ueberauth.Strategy.VK do
   end
 
   defp user_query(conn) do
-    query = conn
+    query =
+      conn
       |> query_params(:locale)
       |> Map.merge(query_params(conn, :profile))
       |> Map.merge(query_params(conn, :user_id))
