@@ -1,7 +1,7 @@
 defmodule UeberauthVK.Mixfile do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.1.2"
   @url "https://github.com/sobolevn/ueberauth_vk"
 
   def project do

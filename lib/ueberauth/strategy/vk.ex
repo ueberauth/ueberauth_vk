@@ -188,11 +188,11 @@ defmodule Ueberauth.Strategy.VK do
   end
 
   defp option(conn, key) do
-    default = Map.get(default_options, key)
+    default = Keyword.get(default_options, key)
 
     conn
     |> options
-    |> Map.get(key, default)
+    |> Keyword.get(key, default)
   end
   defp option(nil, conn, key), do: option(conn, key)
   defp option(value, _conn, _key), do: value
