@@ -6,7 +6,7 @@ defmodule Ueberauth.Strategy.VK do
   use Ueberauth.Strategy, default_scope: "",
                           default_display: "page",
                           profile_fields: "",
-                          uid_field: :id,
+                          uid_field: :uid,
                           allowed_request_params: [
                             :display,
                             :scope
@@ -101,7 +101,7 @@ defmodule Ueberauth.Strategy.VK do
   """
   def info(conn) do
     token = conn.private.vk_token
-    user = conn.private.vk_user["response"] |> List.first
+    user = conn.private.vk_user
 
     %Info{
       first_name: user["first_name"],
@@ -151,7 +151,7 @@ defmodule Ueberauth.Strategy.VK do
         set_errors!(conn, [error("token", "unauthorized")])
       {:ok, %OAuth2.Response{status_code: status_code, body: user}}
         when status_code in 200..399 ->
-        put_private(conn, :vk_user, user)
+        put_private(conn, :vk_user, List.first(user["response"]))
       {:error, %OAuth2.Error{reason: reason}} ->
         set_errors!(conn, [error("OAuth2", reason)])
     end
