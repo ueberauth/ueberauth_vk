@@ -188,11 +188,11 @@ defmodule Ueberauth.Strategy.VK do
   end
 
   defp option(conn, key) do
-    default = Dict.get(default_options, key)
+    default = Map.get(default_options, key)
 
     conn
     |> options
-    |> Dict.get(key, default)
+    |> Map.get(key, default)
   end
   defp option(nil, conn, key), do: option(conn, key)
   defp option(value, _conn, _key), do: value
@@ -201,11 +201,7 @@ defmodule Ueberauth.Strategy.VK do
     if params[name] do
       params
     else
-      Map.put(
-        params,
-        name,
-        option(params[name], conn, config_key)
-      )
+      Map.put(params, name,option(params[name], conn, config_key))
     end
   end
 end
