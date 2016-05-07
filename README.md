@@ -19,7 +19,7 @@
     ```elixir
     def deps do
       # installation via hex:
-      [{:ueberauth_vk, "~> 0.1.0"}]
+      [{:ueberauth_vk, "~> 0.1.1"}]
       # if you want to use github:
       # [{:ueberauth_vk, github: "sobolevn/ueberauth_vk"}]
     end
