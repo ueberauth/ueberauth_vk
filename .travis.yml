@@ -1,5 +1,7 @@
 language: elixir
 
+sudo: false
+
 elixir:
   - 1.1.0
   - 1.2.0
@@ -7,14 +9,12 @@ elixir:
 otp_release:
   - 17.4
   - 18.1
+
 env: MIX_ENV=test
 
-sudo: false # faster builds
+script:
+  - mix dogma
+  - mix coveralls.travis
 
 notifications:
   email: false
-
-script:
-  - mix compile # --warnings-as-errors
-  - mix test
-  - mix dogma

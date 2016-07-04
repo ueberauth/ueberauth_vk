@@ -94,3 +94,4 @@ erl_crash.dump
 
 #####=== Custom ===#####
 doc/
+cover/

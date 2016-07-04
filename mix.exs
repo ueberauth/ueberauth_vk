@@ -5,18 +5,29 @@ defmodule UeberauthVK.Mixfile do
   @url "https://github.com/sobolevn/ueberauth_vk"
 
   def project do
-    [app: :ueberauth_vk,
-     version: @version,
-     name: "Ueberauth VK Strategy",
-     package: package,
-     elixir: "~> 1.1",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     source_url: @url,
-     homepage_url: @url,
-     description: description,
-     deps: deps,
-     docs: docs]
+    [
+      app: :ueberauth_vk,
+      version: @version,
+      name: "Ueberauth VK Strategy",
+      package: package,
+      elixir: "~> 1.1",
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      source_url: @url,
+      homepage_url: @url,
+      description: description,
+      deps: deps,
+      docs: docs,
+
+      # Test coverage:
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        "coveralls": :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+      ],
+    ]
   end
 
   def application do
@@ -24,20 +35,26 @@ defmodule UeberauthVK.Mixfile do
   end
 
   defp deps do
-    [{:ueberauth, "~> 0.2"},
+   [
+     # Auth:
+     {:ueberauth, "~> 0.2"},
      {:oauth2, "~> 0.5"},
+
+     # Tests:
+     {:exvcr, "~> 0.7", only: :test},
+     {:excoveralls, "~> 0.5", only: :test},
+
+     # Docs:
      {:ex_doc, "~> 0.1", only: :dev},
      {:earmark, ">= 0.0.0", only: :dev},
-     {:dogma, ">= 0.0.0", only: [:dev, :test]}]
-     # {:foobar, path: "path/to/foobar"}
+
+     # Lint:
+     {:dogma, "~> 0.1", only: [:dev, :test]},
+   ]
   end
 
   defp docs do
-    [extras: docs_extras, main: "extra-readme"]
-  end
-
-  defp docs_extras do
-    ["README.md"]
+    [extras: ["README.md"], main: "readme"]
   end
 
   defp description do
@@ -45,9 +62,11 @@ defmodule UeberauthVK.Mixfile do
   end
 
   defp package do
-    [files: ["lib", "mix.exs", "README.md", "LICENSE"],
+    [
+      files: ["lib", "mix.exs", "README.md", "LICENSE"],
       maintainers: ["Sobolev Nikita"],
       licenses: ["MIT"],
-      links: %{"GitHub": @url}]
+      links: %{"GitHub": @url},
+    ]
   end
 end

@@ -31,8 +31,8 @@ defmodule Ueberauth.Strategy.VK do
       |> maybe_replace_param(conn, "auth_type", :auth_type)
       |> maybe_replace_param(conn, "scope", :default_scope)
       |> maybe_replace_param(conn, "display", :default_display)
-      |> Enum.filter(fn {k,_v} -> Enum.member?(allowed_params, k) end)
-      |> Enum.map(fn {k,v} -> {String.to_existing_atom(k), v} end)
+      |> Enum.filter(fn {k, _} -> Enum.member?(allowed_params, k) end)
+      |> Enum.map(fn {k, v} -> {String.to_existing_atom(k), v} end)
       |> Keyword.put(:redirect_uri, callback_url(conn))
       |> Ueberauth.Strategy.VK.OAuth.authorize_url!
 
@@ -107,9 +107,10 @@ defmodule Ueberauth.Strategy.VK do
       first_name: user["first_name"],
       last_name: user["last_name"],
       email: token.other_params["email"],
-      name: user["name"],
+      name: fetch_name(user),
       image: fetch_image(user),
-      location: user["location"],
+      location: user["city"],
+      description: user["about"],
       urls: %{
         vk: "https://vk.com/" <> to_string(user["uid"])
       }
@@ -128,6 +129,8 @@ defmodule Ueberauth.Strategy.VK do
       }
     }
   end
+
+  defp fetch_name(user), do: user["first_name"] <> " " <> user["last_name"]
 
   defp fetch_image(user) do
     user_photo =
