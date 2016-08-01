@@ -16,6 +16,6 @@ defmodule Ueberauth.Strategy.VK.OAuthTest do
     # Defaults:
     assert client.authorize_url == "https://oauth.vk.com/authorize"
     assert client.token_url == "https://oauth.vk.com/access_token"
-    assert client.site == "https://oauth.vk.com"
+    assert client.site == "https://api.vk.com/method"
   end
 end
