@@ -1,4 +1,5 @@
 # Überauth VK
+
 [![Build Status][travis-img]][travis] [![Coverage Status][coverage-img]][coverage] [![Hex Version][hex-img]][hex] [![License][license-img]][license]
 
 > VK OAuth2 strategy for Überauth.
@@ -97,7 +98,7 @@ See [VK API Method Reference > User](https://vk.com/dev/users.get) for full list
 
 ## License
 
-MIT. Please see [LICENSE](https://github.com/ueberauth/ueberauth_vk/blob/master/LICENSE) for licensing details.
+MIT. Please see [LICENSE.md](https://github.com/sobolevn/ueberauth_vk/blob/master/LICENSE.md) for licensing details.
 
   [travis-img]: https://img.shields.io/travis/sobolevn/ueberauth_vk/master.svg
   [travis]: https://travis-ci.org/sobolevn/ueberauth_vk

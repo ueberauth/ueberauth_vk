@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.3
+
+* Changed the default `:site` url
+* Added `LICENSE` information
+* Removed unused lines from `mix.exs`
+
 ## v0.1.2
 
 * Added tests

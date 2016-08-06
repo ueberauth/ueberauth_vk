@@ -1,7 +1,7 @@
 defmodule UeberauthVK.Mixfile do
   use Mix.Project
 
-  @version "0.1.2"
+  @version "0.1.3"
   @url "https://github.com/sobolevn/ueberauth_vk"
 
   def project do
@@ -11,8 +11,7 @@ defmodule UeberauthVK.Mixfile do
       name: "Ueberauth VK Strategy",
       package: package,
       elixir: "~> 1.1",
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+
       source_url: @url,
       homepage_url: @url,
       description: description,
@@ -63,7 +62,7 @@ defmodule UeberauthVK.Mixfile do
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README.md", "LICENSE"],
+      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
       maintainers: ["Sobolev Nikita"],
       licenses: ["MIT"],
       links: %{"GitHub": @url},
