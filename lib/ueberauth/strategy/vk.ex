@@ -154,7 +154,7 @@ defmodule Ueberauth.Strategy.VK do
         set_errors!(conn, [error("token", "unauthorized")])
       {:ok, %OAuth2.Response{status_code: status_code, body: user}}
         when status_code in 200..399 ->
-        put_private(conn, :vk_user, List.first(user["response"]))
+          put_private(conn, :vk_user, List.first(user["response"]))
       {:error, %OAuth2.Error{reason: reason}} ->
         set_errors!(conn, [error("OAuth2", reason)])
     end
@@ -204,7 +204,7 @@ defmodule Ueberauth.Strategy.VK do
     if params[name] do
       params
     else
-      Map.put(params, name,option(params[name], conn, config_key))
+      Map.put(params, name, option(params[name], conn, config_key))
     end
   end
 end
