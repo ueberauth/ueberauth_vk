@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.0
+
+* Changed the `oauth2` version to `0.6.0`
+* Changed how `profile_url` is generated
+* Changed supported `elixir` version to `1.2` and greater
+
 ## v0.1.3
 
 * Changed the default `:site` url

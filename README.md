@@ -4,6 +4,10 @@
 
 > VK OAuth2 strategy for Überauth.
 
+## Requirements
+
+We support `elixir` versions `1.2` and bellow.
+
 ## Installation
 
 1. Setup your application at [VK Developers](https://vk.com/dev).
@@ -13,7 +17,7 @@
     ```elixir
     def deps do
       # installation via hex:
-      [{:ueberauth_vk, "~> 0.1"}]
+      [{:ueberauth_vk, "~> 0.2"}]
       # if you want to use github:
       # [{:ueberauth_vk, github: "sobolevn/ueberauth_vk"}]
     end
