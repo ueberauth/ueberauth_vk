@@ -112,7 +112,7 @@ defmodule Ueberauth.Strategy.VK do
       location: user["city"],
       description: user["about"],
       urls: %{
-        vk: "https://vk.com/" <> to_string(user["uid"])
+        vk: "https://vk.com/id" <> to_string(user["uid"])
       }
     }
   end
