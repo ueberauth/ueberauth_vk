@@ -95,7 +95,7 @@ defmodule Ueberauth.Strategy.VKTest do
       description: "some info",
       image: "100.jpg",
       urls: %{
-        vk: "https://vk.com/210700286"
+        vk: "https://vk.com/id210700286"
       }
     }
   end
