@@ -44,14 +44,15 @@ defmodule Ueberauth.Strategy.VK do
   """
   def handle_callback!(%Plug.Conn{params: %{"code" => code}} = conn) do
     opts = [redirect_uri: callback_url(conn)]
-    token = Ueberauth.Strategy.VK.OAuth.get_token!([code: code], opts)
+    client = Ueberauth.Strategy.VK.OAuth.get_token!([code: code], opts)
+    token = client.token
 
     if token.access_token == nil do
       err = token.other_params["error"]
       desc = token.other_params["error_description"]
       set_errors!(conn, [error(err, desc)])
     else
-      fetch_user(conn, token)
+      fetch_user(conn, client)
     end
   end
 
@@ -145,11 +146,11 @@ defmodule Ueberauth.Strategy.VK do
     end
   end
 
-  defp fetch_user(conn, token) do
-    conn = put_private(conn, :vk_token, token)
+  defp fetch_user(conn, client) do
+    conn = put_private(conn, :vk_token, client.token)
     path = user_query(conn)
 
-    case OAuth2.AccessToken.get(token, path) do
+    case OAuth2.Client.get(client, path) do
       {:ok, %OAuth2.Response{status_code: 401, body: _body}} ->
         set_errors!(conn, [error("token", "unauthorized")])
       {:ok, %OAuth2.Response{status_code: status_code, body: user}}
