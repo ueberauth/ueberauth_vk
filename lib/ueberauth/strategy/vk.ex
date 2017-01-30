@@ -12,10 +12,9 @@ defmodule Ueberauth.Strategy.VK do
                             :scope
                           ]
 
-
-  alias Ueberauth.Auth.Info
-  alias Ueberauth.Auth.Credentials
-  alias Ueberauth.Auth.Extra
+  alias OAuth2.{Response, Error, Client}
+  alias Ueberauth.Auth.{Info, Credentials, Extra}
+  alias Ueberauth.Strategy.VK.OAuth
 
   @doc """
   Handles initial request for VK authentication.
@@ -34,7 +33,7 @@ defmodule Ueberauth.Strategy.VK do
       |> Enum.filter(fn {k, _} -> Enum.member?(allowed_params, k) end)
       |> Enum.map(fn {k, v} -> {String.to_existing_atom(k), v} end)
       |> Keyword.put(:redirect_uri, callback_url(conn))
-      |> Ueberauth.Strategy.VK.OAuth.authorize_url!
+      |> OAuth.authorize_url!
 
     redirect!(conn, authorize_url)
   end
@@ -44,7 +43,7 @@ defmodule Ueberauth.Strategy.VK do
   """
   def handle_callback!(%Plug.Conn{params: %{"code" => code}} = conn) do
     opts = [redirect_uri: callback_url(conn)]
-    client = Ueberauth.Strategy.VK.OAuth.get_token!([code: code], opts)
+    client = OAuth.get_token!([code: code], opts)
     token = client.token
 
     if token.access_token == nil do
@@ -85,11 +84,12 @@ defmodule Ueberauth.Strategy.VK do
   """
   def credentials(conn) do
     token = conn.private.vk_token
-    scopes = token.other_params["scope"] || ""
-    scopes = String.split(scopes, ",")
+    scopes = String.split(
+      token.other_params["scope"] || "", ","
+    )
 
     %Credentials{
-      expires: !!token.expires_at,
+      expires: token.expires_at == nil,
       expires_at: token.expires_at,
       scopes: scopes,
       token: token.access_token
@@ -150,13 +150,13 @@ defmodule Ueberauth.Strategy.VK do
     conn = put_private(conn, :vk_token, client.token)
     path = user_query(conn)
 
-    case OAuth2.Client.get(client, path) do
-      {:ok, %OAuth2.Response{status_code: 401, body: _body}} ->
+    case Client.get(client, path) do
+      {:ok, %Response{status_code: 401, body: _body}} ->
         set_errors!(conn, [error("token", "unauthorized")])
-      {:ok, %OAuth2.Response{status_code: status_code, body: user}}
+      {:ok, %Response{status_code: status_code, body: user}}
         when status_code in 200..399 ->
           put_private(conn, :vk_user, List.first(user["response"]))
-      {:error, %OAuth2.Error{reason: reason}} ->
+      {:error, %Error{reason: reason}} ->
         set_errors!(conn, [error("OAuth2", reason)])
     end
   end
@@ -192,7 +192,7 @@ defmodule Ueberauth.Strategy.VK do
   end
 
   defp option(conn, key) do
-    default = Keyword.get(default_options, key)
+    default = Keyword.get(default_options(), key)
 
     conn
     |> options

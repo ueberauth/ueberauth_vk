@@ -1,5 +1,5 @@
 defmodule Ueberauth.Strategy.VK.OAuth do
-  @moduledoc """
+  @moduledoc ~S"""
   OAuth2 for VK.
 
   Add `client_id` and `client_secret` to your configuration:
@@ -9,6 +9,9 @@ defmodule Ueberauth.Strategy.VK.OAuth do
         client_secret: System.get_env("VK_APP_SECRET")
   """
   use OAuth2.Strategy
+
+  alias OAuth2.Client
+  alias OAuth2.Strategy.AuthCode
 
   @defaults [
     strategy: __MODULE__,
@@ -32,7 +35,7 @@ defmodule Ueberauth.Strategy.VK.OAuth do
       |> Keyword.merge(config)
       |> Keyword.merge(opts)
 
-    OAuth2.Client.new(opts)
+    Client.new(opts)
   end
 
   @doc """
@@ -41,26 +44,26 @@ defmodule Ueberauth.Strategy.VK.OAuth do
   """
   def authorize_url!(params \\ [], opts \\ []) do
     opts
-    |> client
-    |> OAuth2.Client.authorize_url!(params)
+    |> client()
+    |> Client.authorize_url!(params)
   end
 
   def get_token!(params \\ [], opts \\ []) do
     opts
-    |> client
-    |> put_param(:client_secret, client.client_secret)
-    |> OAuth2.Client.get_token!(params)
+    |> client()
+    |> put_param(:client_secret, client().client_secret)
+    |> Client.get_token!(params)
   end
 
   # Strategy Callbacks
 
   def authorize_url(client, params) do
-    OAuth2.Strategy.AuthCode.authorize_url(client, params)
+    AuthCode.authorize_url(client, params)
   end
 
   def get_token(client, params, headers) do
     client
     |> put_header("Accept", "application/json")
-    |> OAuth2.Strategy.AuthCode.get_token(params, headers)
+    |> AuthCode.get_token(params, headers)
   end
 end

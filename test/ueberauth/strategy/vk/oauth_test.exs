@@ -4,7 +4,7 @@ defmodule Ueberauth.Strategy.VK.OAuthTest do
   import Ueberauth.Strategy.VK.OAuth, only: [client: 0]
 
   setup do
-    {:ok, %{client: client}}
+    {:ok, %{client: client()}}
   end
 
   test "creates correct client", %{client: client} do

@@ -44,14 +44,15 @@ defmodule UeberauthVK.Mixfile do
 
      # Tests:
      {:exvcr, "~> 0.8.4", only: :test},
-     {:excoveralls, "~> 0.5", only: :test},
+     {:excoveralls, "~> 0.6", only: :test},
+     {:poison, "~> 3.0", only: :test}, # is needed for tests
 
      # Docs:
      {:ex_doc, "~> 0.1", only: :dev},
      {:earmark, ">= 0.0.0", only: :dev},
 
      # Lint:
-     {:dogma, "~> 0.1", only: [:dev, :test]},
+     {:credo, "~> 0.6", only: [:dev, :test]},
    ]
   end
 
