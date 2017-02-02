@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.1
+
+* Changed default linter from `dogma` to `credo`
+* Added `elixir` 1.4 support
+
 ## v0.2.0
 
 * Changed the `oauth2` version to `0.6.0`
