@@ -1,6 +1,6 @@
 # Überauth VK
 
-[![Build Status][travis-img]][travis] [![Coverage Status][coverage-img]][coverage] [![Hex Version][hex-img]][hex] [![License][license-img]][license]
+[![Build Status](https://img.shields.io/travis/sobolevn/ueberauth_vk/master.svg)](https://travis-ci.org/sobolevn/ueberauth_vk) [![Coverage Status](https://coveralls.io/repos/github/sobolevn/ueberauth_vk/badge.svg?branch=master)](https://coveralls.io/github/sobolevn/ueberauth_vk?branch=master) [![Hex Version](https://img.shields.io/hexpm/v/ueberauth_vk.svg)](https://hex.pm/packages/ueberauth_vk) [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
 
 > VK OAuth2 strategy for Überauth.
 
@@ -103,12 +103,3 @@ See [VK API Method Reference > User](https://vk.com/dev/users.get) for full list
 ## License
 
 MIT. Please see [LICENSE.md](https://github.com/sobolevn/ueberauth_vk/blob/master/LICENSE.md) for licensing details.
-
-  [travis-img]: https://img.shields.io/travis/sobolevn/ueberauth_vk/master.svg
-  [travis]: https://travis-ci.org/sobolevn/ueberauth_vk
-  [coverage-img]: https://coveralls.io/repos/github/sobolevn/ueberauth_vk/badge.svg?branch=master
-  [coverage]: https://coveralls.io/github/sobolevn/ueberauth_vk?branch=master
-  [hex-img]: https://img.shields.io/hexpm/v/ueberauth_vk.svg
-  [hex]: https://hex.pm/packages/ueberauth_vk
-  [license-img]: http://img.shields.io/badge/license-MIT-brightgreen.svg
-  [license]: http://opensource.org/licenses/MIT

@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.2
+
+* Fixed `ex_doc` version
+* Fixed documentation issues
+* Removed `earmark` from `dev` dependencies
+
 ## v0.2.1
 
 * Changed default linter from `dogma` to `credo`

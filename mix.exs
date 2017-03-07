@@ -1,7 +1,7 @@
 defmodule UeberauthVK.Mixfile do
   use Mix.Project
 
-  @version "0.2.1"
+  @version "0.2.2"
   @url "https://github.com/sobolevn/ueberauth_vk"
 
   def project do
@@ -19,6 +19,9 @@ defmodule UeberauthVK.Mixfile do
       homepage_url: @url,
       description: description(),
       deps: deps(),
+
+      # Docs
+      name: "ueberauth_vk",
       docs: docs(),
 
       # Test coverage:
@@ -48,8 +51,7 @@ defmodule UeberauthVK.Mixfile do
      {:poison, "~> 3.0", only: :test}, # is needed for tests
 
      # Docs:
-     {:ex_doc, "~> 0.1", only: :dev},
-     {:earmark, ">= 0.0.0", only: :dev},
+     {:ex_doc, "~> 0.14", only: :dev},
 
      # Lint:
      {:credo, "~> 0.6", only: [:dev, :test]},
@@ -57,7 +59,12 @@ defmodule UeberauthVK.Mixfile do
   end
 
   defp docs do
-    [extras: ["README.md"], main: "readme"]
+    # Docs
+    [source_ref: "v#{@version}",
+     main: "README",
+     canonical: "http://hexdocs.pm/ueberauth_vk",
+     source_url: @url,
+     extras: ["README.md"]]
   end
 
   defp description do
@@ -65,11 +72,9 @@ defmodule UeberauthVK.Mixfile do
   end
 
   defp package do
-    [
-      files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
-      maintainers: ["Sobolev Nikita"],
-      licenses: ["MIT"],
-      links: %{"GitHub": @url},
-    ]
+    [files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
+     maintainers: ["Sobolev Nikita"],
+     licenses: ["MIT"],
+     links: %{"GitHub": @url}]
   end
 end
