@@ -43,7 +43,7 @@ defmodule UeberauthVK.Mixfile do
    [
      # Auth:
      {:ueberauth, "~> 0.2"},
-     {:oauth2, "~> 0.8.0"},
+     {:oauth2, "~> 0.8"},
 
      # Tests:
      {:exvcr, "~> 0.8.4", only: :test},
