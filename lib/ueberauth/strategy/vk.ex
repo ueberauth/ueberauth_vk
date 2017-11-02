@@ -5,11 +5,13 @@ defmodule Ueberauth.Strategy.VK do
 
   use Ueberauth.Strategy, default_scope: "",
                           default_display: "page",
+                          default_state: "",
                           profile_fields: "",
                           uid_field: :uid,
                           allowed_request_params: [
                             :display,
-                            :scope
+                            :scope,
+                            :state
                           ]
 
   alias OAuth2.{Response, Error, Client}
@@ -30,6 +32,7 @@ defmodule Ueberauth.Strategy.VK do
       |> maybe_replace_param(conn, "auth_type", :auth_type)
       |> maybe_replace_param(conn, "scope", :default_scope)
       |> maybe_replace_param(conn, "display", :default_display)
+      |> maybe_replace_param(conn, "state", :default_state)
       |> Enum.filter(fn {k, _} -> Enum.member?(allowed_params, k) end)
       |> Enum.map(fn {k, v} -> {String.to_existing_atom(k), v} end)
       |> Keyword.put(:redirect_uri, callback_url(conn))
