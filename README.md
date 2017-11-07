@@ -99,6 +99,13 @@ config :ueberauth, Ueberauth,
 
 See [VK API Method Reference > User](https://vk.com/dev/users.get) for full list of fields.
 
+### State
+
+You can also set the custom field called [`state`](https://github.com/sobolevn/ueberauth_vk/pull/20).
+It is used to prevent "man in the middle" attacks.
+
+This state will be passed to you in the callback as `/auth/vk?state=<session_id>` and will be available in the success struct.
+
 
 ## License
 

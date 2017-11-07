@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.3
+
+* Adds `state` parameter
+
 ## v0.2.2
 
 * Fixed `ex_doc` version
