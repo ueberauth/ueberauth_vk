@@ -5,11 +5,13 @@ defmodule Ueberauth.Strategy.VK do
 
   use Ueberauth.Strategy, default_scope: "",
                           default_display: "page",
+                          default_state: "",
                           profile_fields: "",
                           uid_field: :uid,
                           allowed_request_params: [
                             :display,
-                            :scope
+                            :scope,
+                            :state
                           ]
 
   alias OAuth2.{Response, Error, Client}
@@ -30,6 +32,7 @@ defmodule Ueberauth.Strategy.VK do
       |> maybe_replace_param(conn, "auth_type", :auth_type)
       |> maybe_replace_param(conn, "scope", :default_scope)
       |> maybe_replace_param(conn, "display", :default_display)
+      |> maybe_replace_param(conn, "state", :default_state)
       |> Enum.filter(fn {k, _} -> Enum.member?(allowed_params, k) end)
       |> Enum.map(fn {k, v} -> {String.to_existing_atom(k), v} end)
       |> Keyword.put(:redirect_uri, callback_url(conn))
@@ -41,7 +44,7 @@ defmodule Ueberauth.Strategy.VK do
   @doc """
   Handles the callback from VK.
   """
-  def handle_callback!(%Plug.Conn{params: %{"code" => code}} = conn) do
+  def handle_callback!(%Plug.Conn{params: %{"code" => code, "state" => state}} = conn) do
     opts = [redirect_uri: callback_url(conn)]
     client = OAuth.get_token!([code: code], opts)
     token = client.token
@@ -51,7 +54,7 @@ defmodule Ueberauth.Strategy.VK do
       desc = token.other_params["error_description"]
       set_errors!(conn, [error(err, desc)])
     else
-      fetch_user(conn, client)
+      fetch_user(conn, client, state)
     end
   end
 
@@ -146,8 +149,10 @@ defmodule Ueberauth.Strategy.VK do
     end
   end
 
-  defp fetch_user(conn, client) do
-    conn = put_private(conn, :vk_token, client.token)
+  defp fetch_user(conn, client, state) do
+    conn = conn
+    |> put_private(:vk_token, client.token)
+    |> put_private(:vk_state, state)
     path = user_query(conn)
 
     case Client.get(client, path) do

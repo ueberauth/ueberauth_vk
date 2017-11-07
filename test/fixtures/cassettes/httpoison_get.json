@@ -1,7 +1,7 @@
 [
   {
     "request": {
-      "body": "client_id=appid&client_secret=secret&code=code_abc&grant_type=authorization_code&redirect_uri=http%3A%2F%2Fwww.example.com%2Fauth%2Fvk%2Fcallback",
+      "body": "client_id=appid&client_secret=secret&code=code_abc&grant_type=authorization_code&redirect_uri=http%3A%2F%2Fwww.example.com%2Fauth%2Fvk%2Fcallback&state=abc",
       "headers": {
         "Accept": "application/x-www-form-urlencoded",
         "Content-Type": "application/x-www-form-urlencoded"
