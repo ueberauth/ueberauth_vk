@@ -56,7 +56,7 @@ defmodule Ueberauth.Strategy.VKTest do
   end
 
   test "default callback phase" do
-    query = %{code: "code_abc"} |> URI.encode_query
+    query = %{code: "code_abc", state: "abc"} |> URI.encode_query
 
     use_cassette "httpoison_get" do
       conn =

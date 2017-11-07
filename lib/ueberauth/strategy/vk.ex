@@ -44,7 +44,7 @@ defmodule Ueberauth.Strategy.VK do
   @doc """
   Handles the callback from VK.
   """
-  def handle_callback!(%Plug.Conn{params: %{"code" => code}} = conn) do
+  def handle_callback!(%Plug.Conn{params: %{"code" => code, "state" => state}} = conn) do
     opts = [redirect_uri: callback_url(conn)]
     client = OAuth.get_token!([code: code], opts)
     token = client.token
@@ -54,7 +54,7 @@ defmodule Ueberauth.Strategy.VK do
       desc = token.other_params["error_description"]
       set_errors!(conn, [error(err, desc)])
     else
-      fetch_user(conn, client)
+      fetch_user(conn, client, state)
     end
   end
 
@@ -149,8 +149,10 @@ defmodule Ueberauth.Strategy.VK do
     end
   end
 
-  defp fetch_user(conn, client) do
-    conn = put_private(conn, :vk_token, client.token)
+  defp fetch_user(conn, client, state) do
+    conn = conn
+    |> put_private(:vk_token, client.token)
+    |> put_private(:vk_state, state)
     path = user_query(conn)
 
     case Client.get(client, path) do
