@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.2.4
+
+* Fixes `state` issue, see https://github.com/sobolevn/ueberauth_vk/issues/21
+
 ## v0.2.3
 
 * Adds `state` parameter
