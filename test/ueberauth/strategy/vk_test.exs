@@ -56,6 +56,25 @@ defmodule Ueberauth.Strategy.VKTest do
   end
 
   test "default callback phase" do
+    query = %{code: "code_abc"} |> URI.encode_query
+
+    use_cassette "httpoison_get" do
+      conn =
+        :get
+        |> conn("/auth/vk/callback?#{query}")
+        |> SpecRouter.call(@router)
+
+      assert conn.resp_body == "vk callback"
+
+      auth = conn.assigns.ueberauth_auth
+
+      assert auth.provider == :vk
+      assert auth.strategy == Ueberauth.Strategy.VK
+      assert auth.uid == 210700286
+    end
+  end
+
+  test "callback phase with state" do
     query = %{code: "code_abc", state: "abc"} |> URI.encode_query
 
     use_cassette "httpoison_get" do
