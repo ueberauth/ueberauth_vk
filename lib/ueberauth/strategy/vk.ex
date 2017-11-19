@@ -135,7 +135,6 @@ defmodule Ueberauth.Strategy.VK do
     }
   end
 
-
   defp parse_params(%Plug.Conn{params: %{"code" => code, "state" => state}}) do
     {code, state}
   end
