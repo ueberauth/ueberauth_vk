@@ -6,7 +6,7 @@
 
 ## Requirements
 
-We support `elixir` versions `1.2` and bellow.
+We support `elixir` versions `1.2` and above.
 
 ## Installation
 
