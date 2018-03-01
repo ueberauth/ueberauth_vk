@@ -181,6 +181,7 @@ defmodule Ueberauth.Strategy.VK do
       |> Map.merge(query_params(conn, :profile))
       |> Map.merge(query_params(conn, :user_id))
       |> Map.merge(query_params(conn, :access_token))
+      |> Map.merge(query_params(conn, :version))
       |> URI.encode_query
     "https://api.vk.com/method/users.get?#{query}"
   end
@@ -202,6 +203,9 @@ defmodule Ueberauth.Strategy.VK do
   end
   defp query_params(conn, :access_token) do
     %{"access_token" => conn.private.vk_token.access_token}
+  end
+  defp query_params(conn, :version) do
+    %{"v" => "5.8"}
   end
 
   defp option(conn, key) do
