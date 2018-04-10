@@ -1,7 +1,7 @@
 defmodule UeberauthVK.Mixfile do
   use Mix.Project
 
-  @version "0.3.0"
+  @version "0.3.1"
   @url "https://github.com/sobolevn/ueberauth_vk"
 
   def project do
@@ -50,7 +50,7 @@ defmodule UeberauthVK.Mixfile do
      {:excoveralls, ">= 0.0.0", only: :test},
 
      # Docs:
-     {:ex_doc, ">= 0.0.0", only: :dev},
+     {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
 
      # Lint:
      {:credo, "~> 0.8", only: [:dev, :test]},
@@ -58,12 +58,7 @@ defmodule UeberauthVK.Mixfile do
   end
 
   defp docs do
-    # Docs
-    [source_ref: "v#{@version}",
-     main: "README",
-     canonical: "http://hexdocs.pm/ueberauth_vk",
-     source_url: @url,
-     extras: ["README.md"]]
+    [extras: ["README.md"], main: "readme"]
   end
 
   defp description do

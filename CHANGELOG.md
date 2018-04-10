@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.1
+
+* Fixes docs generation
+
 ## v0.3.0
 
 * Updates requirements versions
