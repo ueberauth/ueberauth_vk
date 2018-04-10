@@ -10,7 +10,7 @@ defmodule UeberauthVK.Mixfile do
       version: @version,
       name: "Ueberauth VK Strategy",
       package: package(),
-      elixir: "~> 1.3",
+      elixir: "~> 1.4",
 
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,

@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.0
+
+* Updates requirements versions
+* Fixes failing tests
+
 ## v0.2.4
 
 * Fixes `state` issue, see https://github.com/sobolevn/ueberauth_vk/issues/21

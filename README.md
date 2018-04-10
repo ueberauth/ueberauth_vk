@@ -6,7 +6,7 @@
 
 ## Requirements
 
-We support `elixir` versions `1.3` and above.
+We support `elixir` versions `1.4` and above.
 
 ## Installation
 
