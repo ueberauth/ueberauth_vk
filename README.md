@@ -6,7 +6,7 @@
 
 ## Requirements
 
-We support `elixir` versions `1.2` and above.
+We support `elixir` versions `1.3` and above.
 
 ## Installation
 
@@ -17,7 +17,7 @@ We support `elixir` versions `1.2` and above.
     ```elixir
     def deps do
       # installation via hex:
-      [{:ueberauth_vk, "~> 0.2"}]
+      [{:ueberauth_vk, "~> 0.3"}]
       # if you want to use github:
       # [{:ueberauth_vk, github: "sobolevn/ueberauth_vk"}]
     end
@@ -73,11 +73,11 @@ We support `elixir` versions `1.2` and above.
 
 For an example implementation see the [Überauth Example](https://github.com/ueberauth/ueberauth_example) application.
 
-## Calling
+## Customizing
 
-Depending on the configured url you can initial the request through: `/auth/vk`
+You can customize [multiple fields](https://vk.com/dev/auth_sites), such as `default_scope`, `default_display`, `default_state`, `profile_fields`, and `uid_field`.
 
-Or with options: `/auth/vk?scope=friends,video,offline`
+### Scope
 
 By default the requested scope is `"public_profile"`. Scope can be configured either explicitly as a `scope` query value on the request path or in your configuration:
 
@@ -87,6 +87,8 @@ config :ueberauth, Ueberauth,
     vk: {Ueberauth.Strategy.VK, [default_scope: "friends,video,offline"]}
   ]
 ```
+
+### Profile Fields
 
 You can also provide custom fields for user profile:
 
@@ -101,10 +103,30 @@ See [VK API Method Reference > User](https://vk.com/dev/users.get) for full list
 
 ### State
 
-You can also set the custom field called [`state`](https://github.com/sobolevn/ueberauth_vk/pull/20).
-It is used to prevent "man in the middle" attacks.
+You can also set the custom field called [`state`](https://github.com/sobolevn/ueberauth_vk/pull/20). It is used to prevent "man in the middle" attacks.
+
+```elixir
+config :ueberauth, Ueberauth,
+  providers: [
+    vk: {Ueberauth.Strategy.VK, [default_state: "secret-state-value"]}
+  ]
+```
 
 This state will be passed to you in the callback as `/auth/vk?state=<session_id>` and will be available in the success struct.
+
+### UID Field
+
+You can use alternate fields to identify users. For example, you can use `email`.
+
+```elixir
+config :ueberauth, Ueberauth,
+  providers: [
+    vk: {Ueberauth.Strategy.VK, [
+      default_scope: "email",
+      uid_field: :email
+    ]}
+  ]
+```
 
 
 ## License

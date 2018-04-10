@@ -1,6 +1,65 @@
 defmodule Ueberauth.Strategy.VK do
   @moduledoc """
   VK Strategy for Überauth.
+
+  ### Setup
+
+  Create an VK application for you to use.
+
+  Register a new application at: [VK devs](https://vk.com/dev) and get the `client_id` and `client_secret`.
+
+  Include the provider in your configuration for Ueberauth
+
+      config :ueberauth, Ueberauth,
+        providers: [
+          vk: { Ueberauth.Strategy.VK, [] }
+        ]
+
+  Then include the configuration for github.
+
+      config :ueberauth, Ueberauth.Strategy.VK.OAuth,
+        client_id: System.get_env("VK_CLIENT_ID"),
+        client_secret: System.get_env("VK_CLIENT_SECRET"),
+
+  If you haven't already, create a pipeline and setup routes for your callback handler
+
+      pipeline :auth do
+        Ueberauth.plug "/auth"
+      end
+      scope "/auth" do
+        pipe_through [:browser, :auth]
+        get "/:provider/callback", AuthController, :callback
+      end
+
+  Create an endpoint for the callback where you will handle the `Ueberauth.Auth` struct
+
+      defmodule MyApp.AuthController do
+        use MyApp.Web, :controller
+
+        def callback_phase(%{ assigns: %{ ueberauth_failure: fails } } = conn, _params) do
+          # do things with the failure
+        end
+        def callback_phase(%{ assigns: %{ ueberauth_auth: auth } } = conn, params) do
+          # do things with the auth
+        end
+      end
+
+  You can edit the behaviour of the Strategy by including some options when you register your provider.
+
+  You can customize [multiple fields](https://vk.com/dev/auth_sites), such as `default_scope`, `default_display`, `default_state`, `profile_fields`, `uid_field`
+
+      config :ueberauth, Ueberauth,
+        providers: [
+          vk: { Ueberauth.Strategy.VK, [
+            default_scope: "email,friends,video,offline",
+            default_display: "popup",
+            default_state: "secret-state-value",
+            uid_field: :email
+          ] }
+        ]
+
+  Default is empty ("") which "Grants read-only access to public information (includes public user profile info, public repository info, and gists)"
+
   """
 
   use Ueberauth.Strategy, default_scope: "",

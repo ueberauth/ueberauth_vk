@@ -1,7 +1,7 @@
 defmodule UeberauthVK.Mixfile do
   use Mix.Project
 
-  @version "0.2.4"
+  @version "0.3.0"
   @url "https://github.com/sobolevn/ueberauth_vk"
 
   def project do
@@ -10,7 +10,7 @@ defmodule UeberauthVK.Mixfile do
       version: @version,
       name: "Ueberauth VK Strategy",
       package: package(),
-      elixir: "~> 1.2",
+      elixir: "~> 1.3",
 
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -36,25 +36,24 @@ defmodule UeberauthVK.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :oauth2, :ueberauth]]
+    [extra_applications: [:logger]]
   end
 
   defp deps do
    [
      # Auth:
-     {:ueberauth, "~> 0.2"},
-     {:oauth2, "~> 0.8"},
+     {:ueberauth, "~> 0.4"},
+     {:oauth2, "~> 0.9"},
 
      # Tests:
-     {:exvcr, "~> 0.8.4", only: :test},
-     {:excoveralls, "~> 0.6", only: :test},
-     {:poison, "~> 3.0", only: :test}, # is needed for tests
+     {:exvcr, "~> 0.10", only: :test},
+     {:excoveralls, ">= 0.0.0", only: :test},
 
      # Docs:
-     {:ex_doc, "~> 0.14", only: :dev},
+     {:ex_doc, ">= 0.0.0", only: :dev},
 
      # Lint:
-     {:credo, "~> 0.6", only: [:dev, :test]},
+     {:credo, "~> 0.8", only: [:dev, :test]},
    ]
   end
 

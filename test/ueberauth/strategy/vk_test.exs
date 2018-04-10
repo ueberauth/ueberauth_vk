@@ -17,9 +17,7 @@ defmodule Ueberauth.Strategy.VKTest do
 
   # Setups:
   setup_all do
-    # Set the custom location for the cassettes:
-    ExVCR.Config.cassette_library_dir("test/fixtures/cassettes")
-
+    # Creating token:
     token = %{other_params: %{"email" => @test_email}}
 
     # Read the fixture with the user information:
@@ -70,7 +68,7 @@ defmodule Ueberauth.Strategy.VKTest do
 
       assert auth.provider == :vk
       assert auth.strategy == Ueberauth.Strategy.VK
-      assert auth.uid == 210700286
+      assert auth.uid == 210_700_286
     end
   end
 
@@ -89,7 +87,7 @@ defmodule Ueberauth.Strategy.VKTest do
 
       assert auth.provider == :vk
       assert auth.strategy == Ueberauth.Strategy.VK
-      assert auth.uid == 210700286
+      assert auth.uid == 210_700_286
     end
   end
 
