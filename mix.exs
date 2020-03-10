@@ -53,7 +53,7 @@ defmodule UeberauthVK.Mixfile do
      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
 
      # Lint:
-     {:credo, "~> 0.8", only: [:dev, :test]},
+     {:credo, "~> 1.3", only: [:dev, :test]},
    ]
   end
 
