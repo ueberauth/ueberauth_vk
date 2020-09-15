@@ -264,7 +264,7 @@ defmodule Ueberauth.Strategy.VK do
     %{"access_token" => conn.private.vk_token.access_token}
   end
   defp query_params(_conn, :version) do
-    %{"v" => "5.8"}
+    %{"v" => "5.124"}
   end
 
   defp option(conn, key) do
