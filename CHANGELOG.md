@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.4.0
+
+* Fixes VK API version
+
 ## v0.3.1
 
 * Fixes docs generation
