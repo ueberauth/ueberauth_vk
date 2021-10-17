@@ -17,7 +17,7 @@ defmodule Ueberauth.Strategy.VK.OAuth do
     strategy: __MODULE__,
     site: "https://api.vk.com/method",
     authorize_url: "https://oauth.vk.com/authorize",
-    token_url: "https://oauth.vk.com/access_token",
+    token_url: "https://oauth.vk.com/access_token"
   ]
 
   @doc """

@@ -5,16 +5,16 @@ defmodule SpecRouter do
   require Ueberauth
   use Plug.Router
 
-  plug :fetch_query_params
+  plug(:fetch_query_params)
 
-  plug Ueberauth, base_path: "/auth"
+  plug(Ueberauth, base_path: "/auth")
 
-  plug :match
-  plug :dispatch
+  plug(:match)
+  plug(:dispatch)
 
-  get "/auth/vk", do: send_resp(conn, 200, "vk request")
+  get("/auth/vk", do: send_resp(conn, 200, "vk request"))
 
-  get "/auth/vk/callback", do: send_resp(conn, 200, "vk callback")
+  get("/auth/vk/callback", do: send_resp(conn, 200, "vk callback"))
 end
 
 ExUnit.start()

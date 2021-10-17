@@ -62,16 +62,17 @@ defmodule Ueberauth.Strategy.VK do
 
   """
 
-  use Ueberauth.Strategy, default_scope: "",
-                          default_display: "page",
-                          default_state: "",
-                          profile_fields: "",
-                          uid_field: :uid,
-                          allowed_request_params: [
-                            :display,
-                            :scope,
-                            :state
-                          ]
+  use Ueberauth.Strategy,
+    default_scope: "",
+    default_display: "page",
+    default_state: "",
+    profile_fields: "",
+    uid_field: :uid,
+    allowed_request_params: [
+      :display,
+      :scope,
+      :state
+    ]
 
   alias OAuth2.{Response, Error, Client}
   alias Ueberauth.Auth.{Info, Credentials, Extra}
@@ -95,7 +96,7 @@ defmodule Ueberauth.Strategy.VK do
       |> Enum.filter(fn {k, _} -> Enum.member?(allowed_params, k) end)
       |> Enum.map(fn {k, v} -> {String.to_existing_atom(k), v} end)
       |> Keyword.put(:redirect_uri, callback_url(conn))
-      |> OAuth.authorize_url!
+      |> OAuth.authorize_url!()
 
     redirect!(conn, authorize_url)
   end
@@ -147,9 +148,12 @@ defmodule Ueberauth.Strategy.VK do
   """
   def credentials(conn) do
     token = conn.private.vk_token
-    scopes = String.split(
-      token.other_params["scope"] || "", ","
-    )
+
+    scopes =
+      String.split(
+        token.other_params["scope"] || "",
+        ","
+      )
 
     %Credentials{
       expires: token.expires_at == nil,
@@ -197,6 +201,7 @@ defmodule Ueberauth.Strategy.VK do
   defp parse_params(%Plug.Conn{params: %{"code" => code, "state" => state}}) do
     {code, state}
   end
+
   defp parse_params(%Plug.Conn{params: %{"code" => code}}) do
     {code, nil}
   end
@@ -208,7 +213,7 @@ defmodule Ueberauth.Strategy.VK do
       user
       |> Enum.filter(fn {k, _v} -> String.starts_with?(k, "photo_") end)
       |> Enum.sort_by(fn {"photo_" <> size, _v} -> Integer.parse(size) end)
-      |> List.last
+      |> List.last()
 
     case user_photo do
       nil -> nil
@@ -217,17 +222,21 @@ defmodule Ueberauth.Strategy.VK do
   end
 
   defp fetch_user(conn, client, state) do
-    conn = conn
-    |> put_private(:vk_token, client.token)
-    |> put_private(:vk_state, state)
+    conn =
+      conn
+      |> put_private(:vk_token, client.token)
+      |> put_private(:vk_state, state)
+
     path = user_query(conn)
 
     case Client.get(client, path) do
       {:ok, %Response{status_code: 401, body: _body}} ->
         set_errors!(conn, [error("token", "unauthorized")])
+
       {:ok, %Response{status_code: status_code, body: user}}
-        when status_code in 200..399 ->
-          put_private(conn, :vk_user, List.first(user["response"]))
+      when status_code in 200..399 ->
+        put_private(conn, :vk_user, List.first(user["response"]))
+
       {:error, %Error{reason: reason}} ->
         set_errors!(conn, [error("OAuth2", reason)])
     end
@@ -241,7 +250,8 @@ defmodule Ueberauth.Strategy.VK do
       |> Map.merge(query_params(conn, :user_id))
       |> Map.merge(query_params(conn, :access_token))
       |> Map.merge(query_params(conn, :version))
-      |> URI.encode_query
+      |> URI.encode_query()
+
     "https://api.vk.com/method/users.get?#{query}"
   end
 
@@ -251,18 +261,22 @@ defmodule Ueberauth.Strategy.VK do
       fields -> %{"fields" => fields}
     end
   end
+
   defp query_params(conn, :locale) do
     case option(conn, :locale) do
       nil -> %{}
       locale -> %{"lang" => locale}
     end
   end
+
   defp query_params(conn, :user_id) do
     %{"user_ids" => conn.private.vk_token.other_params["user_id"]}
   end
+
   defp query_params(conn, :access_token) do
     %{"access_token" => conn.private.vk_token.access_token}
   end
+
   defp query_params(_conn, :version) do
     %{"v" => "5.124"}
   end
@@ -274,6 +288,7 @@ defmodule Ueberauth.Strategy.VK do
     |> options
     |> Keyword.get(key, default)
   end
+
   defp option(nil, conn, key), do: option(conn, key)
   defp option(value, _conn, _key), do: value
 
