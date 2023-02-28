@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.0
+
+* Upgrade Ueberauth and Refactor CSRF State Logic
+* Refactor tests
+
 ## v0.4.0
 
 * Fixes VK API version

@@ -65,17 +65,15 @@ defmodule Ueberauth.Strategy.VK do
   use Ueberauth.Strategy,
     default_scope: "",
     default_display: "page",
-    default_state: "",
     profile_fields: "",
-    uid_field: :uid,
+    uid_field: :id,
     allowed_request_params: [
       :display,
-      :scope,
-      :state
+      :scope
     ]
 
-  alias OAuth2.{Response, Error, Client}
-  alias Ueberauth.Auth.{Info, Credentials, Extra}
+  alias OAuth2.{Error, Response}
+  alias Ueberauth.Auth.{Credentials, Extra, Info}
   alias Ueberauth.Strategy.VK.OAuth
 
   @doc """
@@ -92,10 +90,10 @@ defmodule Ueberauth.Strategy.VK do
       |> maybe_replace_param(conn, "auth_type", :auth_type)
       |> maybe_replace_param(conn, "scope", :default_scope)
       |> maybe_replace_param(conn, "display", :default_display)
-      |> maybe_replace_param(conn, "state", :default_state)
       |> Enum.filter(fn {k, _} -> Enum.member?(allowed_params, k) end)
       |> Enum.map(fn {k, v} -> {String.to_existing_atom(k), v} end)
       |> Keyword.put(:redirect_uri, callback_url(conn))
+      |> with_state_param(conn)
       |> OAuth.authorize_url!()
 
     redirect!(conn, authorize_url)
@@ -104,18 +102,13 @@ defmodule Ueberauth.Strategy.VK do
   @doc """
   Handles the callback from VK.
   """
-  def handle_callback!(%Plug.Conn{params: %{"code" => _}} = conn) do
-    {code, state} = parse_params(conn)
+  def handle_callback!(%Plug.Conn{params: %{"code" => code}} = conn) do
     opts = [redirect_uri: callback_url(conn)]
-    client = OAuth.get_token!([code: code], opts)
-    token = client.token
-
-    if token.access_token == nil do
-      err = token.other_params["error"]
-      desc = token.other_params["error_description"]
-      set_errors!(conn, [error(err, desc)])
-    else
-      fetch_user(conn, client, state)
+    case OAuth.get_access_token([code: code], opts) do
+      {:ok, token} ->
+        fetch_user(conn, token)
+      {:error, {error_code, error_description}} ->
+        set_errors!(conn, [error(error_code, error_description)])
     end
   end
 
@@ -174,13 +167,14 @@ defmodule Ueberauth.Strategy.VK do
     %Info{
       first_name: user["first_name"],
       last_name: user["last_name"],
+      nickname: user["domain"],
       email: token.other_params["email"],
       name: fetch_name(user),
       image: fetch_image(user),
       location: user["city"],
       description: user["about"],
       urls: %{
-        vk: "https://vk.com/id" <> to_string(user["uid"])
+        vk: "https://vk.com/id" <> to_string(user["id"])
       }
     }
   end
@@ -198,14 +192,6 @@ defmodule Ueberauth.Strategy.VK do
     }
   end
 
-  defp parse_params(%Plug.Conn{params: %{"code" => code, "state" => state}}) do
-    {code, state}
-  end
-
-  defp parse_params(%Plug.Conn{params: %{"code" => code}}) do
-    {code, nil}
-  end
-
   defp fetch_name(user), do: user["first_name"] <> " " <> user["last_name"]
 
   defp fetch_image(user) do
@@ -221,15 +207,11 @@ defmodule Ueberauth.Strategy.VK do
     end
   end
 
-  defp fetch_user(conn, client, state) do
-    conn =
-      conn
-      |> put_private(:vk_token, client.token)
-      |> put_private(:vk_state, state)
-
+  defp fetch_user(conn, token) do
+    conn = conn |> put_private(:vk_token, token)
     path = user_query(conn)
 
-    case Client.get(client, path) do
+    case OAuth.get(token, path) do
       {:ok, %Response{status_code: 401, body: _body}} ->
         set_errors!(conn, [error("token", "unauthorized")])
 

@@ -6,7 +6,7 @@
 
 ## Requirements
 
-We support `elixir` versions `1.4` and above.
+We support `elixir` versions `1.11` and above.
 
 ## Installation
 
@@ -75,7 +75,7 @@ For an example implementation see the [Überauth Example](https://github.com/ueb
 
 ## Customizing
 
-You can customize [multiple fields](https://vk.com/dev/auth_sites), such as `default_scope`, `default_display`, `default_state`, `profile_fields`, and `uid_field`.
+You can customize [multiple fields](https://vk.com/dev/auth_sites), such as `default_scope`, `default_display`, `profile_fields`, and `uid_field`.
 
 ### Scope
 
@@ -100,19 +100,6 @@ config :ueberauth, Ueberauth,
 ```
 
 See [VK API Method Reference > User](https://vk.com/dev/users.get) for full list of fields.
-
-### State
-
-You can also set the custom field called [`state`](https://github.com/sobolevn/ueberauth_vk/pull/20). It is used to prevent "man in the middle" attacks.
-
-```elixir
-config :ueberauth, Ueberauth,
-  providers: [
-    vk: {Ueberauth.Strategy.VK, [default_state: "secret-state-value"]}
-  ]
-```
-
-This state will be passed to you in the callback as `/auth/vk?state=<session_id>` and will be available in the success struct.
 
 ### UID Field
 
