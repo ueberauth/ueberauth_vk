@@ -10,7 +10,7 @@ defmodule Ueberauth.Strategy.VK.OAuth do
   """
   use OAuth2.Strategy
 
-  alias OAuth2.Client
+  alias OAuth2.{Client, Error, Response}
   alias OAuth2.Strategy.AuthCode
 
   @defaults [
@@ -36,6 +36,7 @@ defmodule Ueberauth.Strategy.VK.OAuth do
       |> Keyword.merge(opts)
 
     Client.new(opts)
+    |> Client.put_serializer("application/json", Ueberauth.json_library())
   end
 
   @doc """
@@ -48,11 +49,33 @@ defmodule Ueberauth.Strategy.VK.OAuth do
     |> Client.authorize_url!(params)
   end
 
-  def get_token!(params \\ [], opts \\ []) do
+  def get(token, url, headers \\ [], opts \\ []) do
+    [token: token]
+    |> client
+    |> put_param("client_secret", client().client_secret)
+    |> Client.get(url, headers, opts)
+  end
+
+  def get_access_token(params \\ [], opts \\ []) do
     opts
-    |> client()
+    |> client
     |> put_param(:client_secret, client().client_secret)
-    |> Client.get_token!(params)
+    |> put_header("Accept", "application/json")
+    |> Client.get_token(params)
+    |> case do
+      {:error, %Response{body: %{"error" => error, "error_description" => description}}} ->
+        {:error, {error, description}}
+
+      {:error, %Error{reason: reason}} ->
+        {:error, {"error", to_string(reason)}}
+
+      {:ok, %Client{token: %{access_token: nil} = token}} ->
+        %{"error" => error, "error_description" => description} = token.other_params
+        {:error, {error, description}}
+
+      {:ok, %Client{token: token}} ->
+        {:ok, token}
+    end
   end
 
   # Strategy Callbacks
